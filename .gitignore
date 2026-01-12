@@ -1,0 +1,22 @@
+# Сборка
+build/
+*/build/
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
+# Объектные файлы
+*.o
+*.a
+*.so
+
+# Исполняемые файлы
+lab51
+lab52
+lab53
+lab54
+lab6
+
+# Данные (если не нужны в репозитории)
+*.txt
