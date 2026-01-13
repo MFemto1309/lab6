@@ -155,6 +155,39 @@ void loadFromFile(Catalog* catalog, const char* filename) {
     printf("File '%s' loaded successfully from parent directory. %zu books loaded.\n", filename, catalog->size);
 }
 
+void sort(
+    void* base,
+    size_t len,
+    size_t size,
+    void (*swap)(void*, void*),
+    int (*cmp)(const void*, const void*)
+) {
+    if (!base || len < 2 || !swap || !cmp) return;
+
+    char* arr = (char*)base;
+
+    for (size_t i = 0; i < len - 1; ++i) {
+        size_t min_idx = i;
+        for (size_t j = i + 1; j < len; ++j) {
+            void* elem_j = arr + j * size;
+            void* elem_min = arr + min_idx * size;
+            if (cmp(elem_j, elem_min) < 0) {
+                min_idx = j;
+            }
+        }
+        if (min_idx != i) {
+            void* elem_i = arr + i * size;
+            void* elem_min = arr + min_idx * size;
+            swap(elem_i, elem_min);
+        }
+    }
+}
+
+void swapBook(void* a, void* b) {
+    Book tmp = *(Book*)a;
+    *(Book*)a = *(Book*)b;
+    *(Book*)b = tmp;
+}
 
 void sortCatalog(Catalog* catalog, FieldSort field) {
     if (catalog->size < 2) return;
@@ -170,7 +203,7 @@ void sortCatalog(Catalog* catalog, FieldSort field) {
     }
 
     if (cmp) {
-        qsort(catalog->book, catalog->size, sizeof(Book), cmp);
+        sort(catalog->book, catalog->size, sizeof(Book), swapBook, cmp);
     }
 }
 
